@@ -28,7 +28,7 @@ const Header = () => {
         </ul>
 
         <a
-          href="tel:+330601323297"
+          href="tel:+33601323297"
           className="hidden lg:flex items-center space-x-2 bg-[#A87B5C] text-white font-medium px-5 py-2 rounded-md shadow-md hover:bg-[#8C6249] transition"
         >
           <FaPhone className="w-5 h-5" />
@@ -53,7 +53,7 @@ const Header = () => {
             <li><a href="#contact" onClick={() => setIsMenuOpen(false)} className="hover:text-[#A87B5C] transition">Contact</a></li>
             <li className="pt-4">
               <a
-                href="tel:+330601323297"
+                href="tel:+33601323297"
                 className="flex items-center space-x-2 bg-[#A87B5C] text-white font-medium px-6 py-3 rounded-md shadow-md hover:bg-[#8C6249] transition"
               >
                 <FaPhone className="w-5 h-5" />
