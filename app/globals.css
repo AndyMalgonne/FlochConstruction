@@ -118,3 +118,19 @@
     @apply bg-background text-foreground;
   }
 }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--header-height);
+}
+
+body {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+:root{
+  --header-height: 88px;
+  --primary:#b38b6d;
+  --accent:#5C4033;
+}
