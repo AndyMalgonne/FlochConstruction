@@ -1,16 +1,84 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
 const images = [
-  "/1.jpeg",
-  "/2.jpeg",
-  "/3.jpeg",
-  "/4.jpeg",
-  "/5.jpeg",
-  "/6.jpeg",
+  "/img/piscine1.jpeg",
+  "/img/piscine2.jpeg",
+  "/img/piscine5.jpeg",
+  "/img/sdb1.jpeg",
+  "/img/toit2.jpeg",
+  "/img/toit3.jpeg",
 ];
 
+const SWIPE_THRESHOLD = 50;
+
 const Portfolio = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [current, setCurrent] = useState<number>(0);
+
+  const touchStartX = useRef<number | null>(null);
+  const touchCurrentX = useRef<number | null>(null);
+  const isDragging = useRef(false);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (!isOpen) return;
+      if (e.key === "Escape") setIsOpen(false);
+      if (e.key === "ArrowRight") setCurrent((c) => (c + 1) % images.length);
+      if (e.key === "ArrowLeft") setCurrent((c) => (c - 1 + images.length) % images.length);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [isOpen]);
+
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = isOpen ? "hidden" : prev;
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [isOpen]);
+
+  const openViewer = (i: number) => {
+    setCurrent(i);
+    setIsOpen(true);
+  };
+
+  const prev = () => setCurrent((c) => (c - 1 + images.length) % images.length);
+  const next = () => setCurrent((c) => (c + 1) % images.length);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchCurrentX.current = touchStartX.current;
+    isDragging.current = true;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging.current || touchStartX.current === null) return;
+    touchCurrentX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (!isDragging.current || touchStartX.current === null || touchCurrentX.current === null) {
+      touchStartX.current = null;
+      touchCurrentX.current = null;
+      isDragging.current = false;
+      return;
+    }
+
+    const dx = touchCurrentX.current - touchStartX.current;
+    if (dx > SWIPE_THRESHOLD) {
+      prev();
+    } else if (dx < -SWIPE_THRESHOLD) {
+      next();
+    }
+    touchStartX.current = null;
+    touchCurrentX.current = null;
+    isDragging.current = false;
+  };
+
   return (
     <section id="portfolio" className="py-12 sm:py-16 lg:py-20 bg-[#f8f3ef]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -23,7 +91,16 @@ const Portfolio = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           {images.map((src, i) => (
-            <div key={i} className="overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
+            <div
+              key={i}
+              className="overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 cursor-pointer"
+              role="button"
+              tabIndex={0}
+              onClick={() => openViewer(i)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") openViewer(i);
+              }}
+            >
               <Image
                 src={src}
                 alt={`project-${i}`}
@@ -34,13 +111,69 @@ const Portfolio = () => {
             </div>
           ))}
         </div>
-
-        <div className="text-center mt-8 sm:mt-12">
-          <a href="#contact" className="inline-block bg-[#b38b6d] text-white px-6 py-2 sm:px-8 sm:py-3 rounded-lg shadow hover:bg-[#a07b62] transition text-sm sm:text-base">
-            Voir nos projets
-          </a>
-        </div>
       </div>
+
+      {isOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+          aria-modal="true"
+          role="dialog"
+        >
+          <div
+            className="relative max-w-5xl w-full mx-auto"
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setIsOpen(false);
+            }}
+          >
+            <button
+              onClick={() => setIsOpen(false)}
+              aria-label="Fermer"
+              className="absolute top-4 right-4 z-50 bg-white/90 text-[#5C4033] rounded-full p-2 shadow hover:bg-white"
+            >
+              ✕
+            </button>
+
+            <div className="flex items-center justify-center">
+              <button
+                onClick={prev}
+                aria-label="Précédent"
+                className="hidden sm:flex items-center justify-center h-12 w-12 bg-white/80 rounded-full mr-4 hover:bg-white"
+              >
+                ‹
+              </button>
+
+              <div
+                className="w-full"
+                style={{ touchAction: "pan-y" }}
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
+              >
+                <div className="relative w-full flex items-center justify-center">
+                  <Image
+                    src={images[current]}
+                    alt={`project-large-${current}`}
+                    width={1600}
+                    height={1000}
+                    className="object-contain max-h-[80vh] mx-auto"
+                  />
+                </div>
+                <p className="text-center text-sm text-white/90 mt-2">
+                  {current + 1} / {images.length}
+                </p>
+              </div>
+
+              <button
+                onClick={next}
+                aria-label="Suivant"
+                className="hidden sm:flex items-center justify-center h-12 w-12 bg-white/80 rounded-full ml-4 hover:bg-white"
+              >
+                ›
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };
