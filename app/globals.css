@@ -130,7 +130,7 @@ body {
 }
 
 :root{
-  --header-height: 88px;
+  --header-height: 4rem;
   --primary:#b38b6d;
   --accent:#5C4033;
 }
