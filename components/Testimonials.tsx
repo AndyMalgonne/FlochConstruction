@@ -12,7 +12,7 @@ const testimonials = [
 		Merci pour votre sérieux, votre ponctualité,  et votre savoir-faire.",
 		name: "Gérard B.",
 		place: "Saint-Maxime",
-		img: "/testimonials/valerie.png",
+		img: "/testimonials/cool.jpg",
 	},
 	{
 	  quote:
