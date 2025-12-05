@@ -25,7 +25,7 @@ export default function Hero() {
 
           <div className="flex justify-center lg:justify-start gap-6 sm:gap-8 text-sm text-[#7b6053] pt-4">
             <div>
-              <div className="text-xl sm:text-2xl font-bold">15+</div>
+              <div className="text-xl sm:text-2xl font-bold">18+</div>
               <div className="text-xs">Années d'expérience</div>
             </div>
             <div>
@@ -39,16 +39,31 @@ export default function Hero() {
           </div>
         </div>
 
-        <div className="mx-auto w-full max-w-md lg:max-w-lg">
-          <div className="w-full rounded-2xl shadow-2xl overflow-hidden ring-1 ring-[#efe7e2]">
-            <Image
-              src="/voiture.png"
-              alt="Maison en pierre"
-              width={920}
-              height={560}
-              className="object-cover w-full h-full"
-              priority
-            />
+        <div className="mx-auto w-full max-w-md lg:max-w-lg mt-8 lg:mt-0">
+          <div className="relative w-full h-64 sm:h-80 lg:h-[560px]">
+            <div className="absolute top-0 left-0 w-2/3 sm:w-3/5 lg:w-3/5 h-2/3 rounded-3xl overflow-hidden shadow-md ring-1 ring-white lg:-translate-x-6 lg:-translate-y-6 lg:-rotate-2 bg-white">
+              <div className="w-full h-full relative">
+                <Image
+                  src="/img/toit6.jpeg"
+                  alt="Piscine en pierre - projet"
+                  fill
+                  className="object-cover"
+                  priority
+                />
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#00000006] mix-blend-overlay" />
+              </div>
+            </div>
+            <div className="absolute bottom-0 right-0 w-2/3 sm:w-3/5 lg:w-3/5 h-2/3 rounded-3xl overflow-hidden z-20 lg:rotate-1">
+              <div className="relative w-full h-full rounded-3xl overflow-hidden shadow-2xl ring-2 ring-[#b38b6d]/10">
+                <Image
+                  src="/img/piscine4.jpeg"
+                  alt="Projet réalisé - détail"
+                  fill
+                  className="object-cover"
+                  priority
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
