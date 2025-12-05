@@ -3,6 +3,18 @@ import Image from "next/image";
 
 const testimonials = [
 	{
+		quote:
+		"Nous tenons à vous remercier chaleureusement  Mr FLOCH  pour la réalisation du \
+		carrelage de notre terrasse ainsi que notre salle de bain ( compliqué je vous l'accorde.) \
+		Le chantier a été  réalisé avec un grand professionnalisme,  un soin remarquable,\
+		 et un soucis du détail que nous avons particulièrement apprécié.\
+		Le résultat est impeccable,  propre et conforme à nos attentes.\
+		Merci pour votre sérieux, votre ponctualité,  et votre savoir-faire.",
+		name: "Gérard B.",
+		place: "Saint-Maxime",
+		img: "/testimonials/valerie.png",
+	},
+	{
 	  quote:
 		"J’ai connu Floch Construction par le biais d’un ami, \
 		  Alan a été réactif pour m’envoyer le devis et s’est adapté au \
@@ -42,7 +54,7 @@ export default function Testimonials() {
           Découvrez ce que nos clients pensent de notre travail
         </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 items-start">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 items-start">
           {testimonials.map((t, i) => (
             <article
               key={i}
