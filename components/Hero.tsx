@@ -11,7 +11,7 @@ export default function Hero() {
             <span className="text-[#b38b6d]">Carrelage d'Excellence</span>
           </h1>
           <p className="text-base sm:text-lg text-[#7b6053] leading-relaxed max-w-lg mx-auto lg:mx-0">
-            Artisan expert en maçonnerie et carrelage dans le Golfe de Saint-Tropez. Plus de 18 ans d'expérience au service de vos projets.
+            Artisan expert en maçonnerie et carrelage dans le Golfe de Saint-Tropez et ses alentours. Plus de 18 ans d'expérience au service de vos projets.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
@@ -35,6 +35,10 @@ export default function Hero() {
             <div>
               <div className="text-xl sm:text-2xl font-bold">100%</div>
               <div className="text-xs">Clients satisfaits</div>
+            </div>
+            <div>
+              <div className="text-xl sm:text-2xl font-bold">40 km</div>
+              <div className="text-xs">Périmetre d'intervention</div>
             </div>
           </div>
         </div>
