@@ -39,3 +39,13 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+/public/img/*
+!/public/img/piscine1.jpeg
+!/public/img/piscine2.jpeg
+!/public/img/piscine5.jpeg
+!/public/img/sdb1.jpeg
+!/public/img/toit2.jpeg
+!/public/img/toit3.jpeg
+!/public/img/toit6.jpeg
+!/public/img/piscine4.jpeg
