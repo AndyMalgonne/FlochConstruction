@@ -11,7 +11,7 @@ const testimonials = [
 		Le résultat est impeccable,  propre et conforme à nos attentes.\
 		Merci pour votre sérieux, votre ponctualité,  et votre savoir-faire.",
 		name: "Gérard B.",
-		place: "Saint-Maxime",
+		place: "Sainte-Maxime",
 		img: "/testimonials/cool.jpg",
 	},
 	{
