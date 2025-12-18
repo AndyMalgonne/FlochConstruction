@@ -94,14 +94,12 @@ export default function TestimonialsCarousel() {
                   }
                 }
               }
-
-              const cardBg = hasImage ? "bg-white" : "bg-[#efe7e2]";
               const key = t._id || `${t.name}-${t.place}`;
 
               return (
                 <article
                   key={key}
-                  className={`${cardBg} border border-[#efe7e2] rounded-lg p-6 shadow-sm flex flex-col`}
+                  className="border border-[#efe7e2] rounded-lg p-6 shadow-sm flex flex-col"
                   aria-label={`Témoignage de ${t.name}`}
                 >
                   <div>
