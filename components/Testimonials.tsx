@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import Image from "next/image";
 import { client } from "../sanity/lib/client";
 import { urlFor } from "../sanity/lib/image";
@@ -16,6 +16,13 @@ type Testimonial = {
 export default function TestimonialsCarousel() {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [itemsPerSlide, setItemsPerSlide] = useState(2);
+  const [slideVisible, setSlideVisible] = useState(true);
+
+  const touchStartX = useRef<number | null>(null);
+  const touchEndX = useRef<number | null>(null);
+  const minSwipeDistance = 50;
+  const slideTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
     let mounted = true;
@@ -26,7 +33,6 @@ export default function TestimonialsCarousel() {
       )
       .then((res: Testimonial[]) => {
         if (!mounted) return;
-
         const limited = res.slice(0, 8);
         setTestimonials(limited);
       })
@@ -37,27 +43,83 @@ export default function TestimonialsCarousel() {
     };
   }, []);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(max-width: 639px)");
+    const handler = (e: MediaQueryListEvent | MediaQueryList) => {
+      setItemsPerSlide(e.matches ? 1 : 2);
+    };
+    handler(mq);
+    if (mq.addEventListener) mq.addEventListener("change", handler);
+    else mq.addListener(handler);
+    return () => {
+      if (mq.removeEventListener) mq.removeEventListener("change", handler);
+      else mq.removeListener(handler);
+    };
+  }, []);
+
+  useEffect(() => {
+    setCurrentIndex(0);
+  }, [itemsPerSlide, testimonials.length]);
+
+  useEffect(() => {
+    return () => {
+      if (slideTimeoutRef.current) window.clearTimeout(slideTimeoutRef.current);
+    };
+  }, []);
+
+  const slides: Testimonial[][] = useMemo(() => {
+    const s: Testimonial[][] = [];
+    for (let i = 0; i < testimonials.length; i += itemsPerSlide) {
+      s.push(testimonials.slice(i, i + itemsPerSlide));
+    }
+    return s;
+  }, [testimonials, itemsPerSlide]);
+
   if (!testimonials.length) return null;
 
-  // Créer les slides 2 par 2
-  const slides: Testimonial[][] = [];
-  for (let i = 0; i < testimonials.length; i += 2) {
-    slides.push(testimonials.slice(i, i + 2));
-  }
-
-  const safeIndex = Math.min(currentIndex, slides.length - 1);
+  const safeIndex = Math.min(currentIndex, Math.max(0, slides.length - 1));
   const currentSlide = slides[safeIndex] || [];
 
+  const changeSlide = (newIndex: number) => {
+    if (slideTimeoutRef.current) window.clearTimeout(slideTimeoutRef.current);
+    setSlideVisible(false);
+    slideTimeoutRef.current = window.setTimeout(() => {
+      setCurrentIndex(newIndex);
+      setSlideVisible(true);
+      slideTimeoutRef.current = null;
+    }, 180);
+  };
+
   const prev = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? slides.length - 1 : prevIndex - 1
-    );
+    changeSlide(currentIndex === 0 ? slides.length - 1 : currentIndex - 1);
   };
 
   const next = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === slides.length - 1 ? 0 : prevIndex + 1
-    );
+    changeSlide(currentIndex === slides.length - 1 ? 0 : currentIndex + 1);
+  };
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    if (itemsPerSlide !== 1) return;
+    touchEndX.current = null;
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    if (itemsPerSlide !== 1) return;
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const onTouchEnd = () => {
+    if (itemsPerSlide !== 1) return;
+    if (touchStartX.current === null || touchEndX.current === null) return;
+    const distance = touchStartX.current - touchEndX.current;
+    if (Math.abs(distance) > minSwipeDistance) {
+      if (distance > 0) next();
+      else prev();
+    }
+    touchStartX.current = null;
+    touchEndX.current = null;
   };
 
   return (
@@ -70,8 +132,17 @@ export default function TestimonialsCarousel() {
           Découvrez ce que nos clients pensent de notre travail
         </p>
 
-        <div className="relative">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div
+          className="relative"
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
+        >
+          <div
+            className={`grid grid-cols-1 sm:grid-cols-2 gap-6 min-h-[220px] transform transition-all duration-200 ease-in-out ${
+              slideVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2"
+            }`}
+          >
             {currentSlide.map((t) => {
               const hasImage = Boolean(t.img);
               let imageUrl: string | null = null;
@@ -99,7 +170,7 @@ export default function TestimonialsCarousel() {
               return (
                 <article
                   key={key}
-                  className="border border-[#efe7e2] rounded-lg p-6 shadow-sm flex flex-col"
+                  className="border border-[#efe7e2] rounded-lg p-6 shadow-sm flex flex-col bg-white"
                   aria-label={`Témoignage de ${t.name}`}
                 >
                   <div>
@@ -135,26 +206,30 @@ export default function TestimonialsCarousel() {
               );
             })}
           </div>
-
-          {/* Navigation */}
-          <div className="absolute top-1/2 -translate-y-1/2 -left-8 z-10">
+          <div className="hidden sm:flex absolute inset-y-0 -left-12 z-20 items-center">
             <button
               onClick={prev}
-              className="bg-[#b38b6d] text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-[#a3734f]"
+              aria-label="Précédent"
+              className="pointer-events-auto bg-white/90 backdrop-blur-sm hover:bg-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg ring-1 ring-[#e9dcd1] text-[#5C4033] transition-transform duration-150 transform hover:scale-105"
             >
-              ‹
-            </button>
-          </div>
-          <div className="absolute top-1/2 -translate-y-1/2 -right-8 z-10">
-            <button
-              onClick={next}
-              className="bg-[#b38b6d] text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-[#a3734f]"
-            >
-              ›
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <path d="M15 18l-6-6 6-6" />
+              </svg>
             </button>
           </div>
 
-          {/* Pagination */}
+          <div className="hidden sm:flex absolute inset-y-0 -right-12 z-20 items-center">
+            <button
+              onClick={next}
+              aria-label="Suivant"
+              className="pointer-events-auto bg-white/90 backdrop-blur-sm hover:bg-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg ring-1 ring-[#e9dcd1] text-[#5C4033] transition-transform duration-150 transform hover:scale-105"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </button>
+          </div>
+
           <div className="flex justify-center gap-2 mt-4">
             {slides.map((_, i) => (
               <span
