@@ -5,7 +5,7 @@ import Header from "@/components/Header";
 export const metadata: Metadata = {
   title: "Floch Construction",
   description: "Maçonnerie & Carrelage d'Excellence",
-  icons: { icon: "/logo.svg" },
+  icons: { icon: "/logo.png" },
 };
 
 export default function RootLayout({
