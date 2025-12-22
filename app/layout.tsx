@@ -7,9 +7,13 @@ export const metadata: Metadata = {
 	title: "Floch Construction",
 	description: "Maçonnerie & Carrelage d'Excellence",
 	icons: {
-		icon: "/logo.png",
+		icon: [
+			{ url: "/favicon.ico", sizes: "any" },
+			{ url: "/logo.png", type: "image/png" },
+		],
 		apple: "/logo.png",
 	},
+	manifest: "/manifest.json",
 };
 
 const schema = {
