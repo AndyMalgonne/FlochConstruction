@@ -3,8 +3,8 @@ import Image from "next/image";
 
 export default function Hero() {
 	return (
-		<section id="hero" className="relative bg-[#f8f3ef] pt-24 sm:pt-28 overflow-hidden">
-			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+		<section id="hero" className="relative bg-[#f8f3ef] pt-16 sm:pt-28 overflow-hidden">
+			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16 lg:py-20 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
 				<div className="space-y-6 text-center lg:text-left">
 					<h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-[#5C4033] leading-tight">
 						Maçonnerie & <br className="hidden sm:block" />
