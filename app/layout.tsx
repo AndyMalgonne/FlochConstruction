@@ -3,9 +3,13 @@ import "./globals.css";
 import Header from "@/components/Header";
 
 export const metadata: Metadata = {
+	metadataBase: new URL("https://flochconstruction.fr"),
 	title: "Floch Construction",
 	description: "Maçonnerie & Carrelage d'Excellence",
-	icons: { icon: "/logo.png" },
+	icons: {
+		icon: "/logo.png",
+		apple: "/logo.png",
+	},
 };
 
 const schema = {
@@ -13,7 +17,7 @@ const schema = {
 	"@type": "LocalBusiness",
 	name: "Floch Construction",
 	url: "https://flochconstruction.fr",
-	logo: "/logo.png",
+	logo: "https://flochconstruction.fr/logo.png",
 	telephone: "+33601322997",
 	description:
 		"Maçonnerie & Carrelage d'Excellence — Artisans dans le Golfe de Saint-Tropez.",
