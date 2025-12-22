@@ -12,7 +12,7 @@ const schema = {
 	"@context": "https://schema.org",
 	"@type": "LocalBusiness",
 	name: "Floch Construction",
-	url: "https://flochconstruction.com",
+	url: "https://flochconstruction.fr",
 	logo: "/logo.png",
 	telephone: "+33601322997",
 	description:
