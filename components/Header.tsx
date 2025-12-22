@@ -10,7 +10,7 @@ const Header = () => {
 			<nav className="flex items-center justify-between fixed w-full px-4 sm:px-8 py-4 bg-white shadow-sm top-0 z-50">
 				<div className="flex items-center space-x-2">
 					<Link href="/" className="text-sm sm:text-md lg:text-xl font-bold text-[#5A3E2B] flex items-center gap-2">
-						<Image src="/logo.svg" alt="Floch Construction" width={32} height={32} className="sm:w-10 sm:h-10" />
+						<Image src="/logo.png" alt="Floch Construction" width={32} height={32} className="sm:w-10 sm:h-10" />
 						<span className="hidden sm:inline">Floch Construction</span>
 					</Link>
 				</div>
